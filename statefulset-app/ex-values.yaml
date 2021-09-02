@@ -1,0 +1,56 @@
+# Default values for foundry-helm.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+statefulset:
+  containers:
+    - image: felddy/foundryvtt:release
+      ports:
+        - name: foundry-port
+          containerPort: 30000
+      volumeMounts:
+        - name: foundry-storage
+          mountPath: /data
+      env:
+        # after helm install run:
+        # kubectl create secret generic <secret-name> -n <ns> --from-literal <key>='<value>'
+        - name: SECRET_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: mysecret
+              key: username
+        - name: SECRET_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mysecret
+              key: password
+  volumes:
+    - name: foundry-storage
+
+volume:
+  enabled: true
+  size: 10Gi
+  hostPath: ""  # prefixed by data/, defaults to data/{releaseName}
+  claimName: foundry-pv-claim
+
+service:
+  ports:
+    - name: port-name
+      port: 30000
+      targetPort: 30000
+
+ingress:
+  enabled: true
+  rules:
+    - host: ""
+      http:
+        paths:
+          - path: /
+#            pathType: Prefix  # optional
+            backend:
+              service:
+                # defaults to release name, only ok if one rule
+                name: ""
+                port:
+                  number: 30000
+
+appRole: cluster-admin
