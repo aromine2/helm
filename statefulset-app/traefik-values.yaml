@@ -1,0 +1,16 @@
+entryPoints:
+  web:
+    address: ":80"
+
+  websecure:
+    address: ":443"
+
+certificatesResolvers:
+  letsEncrypt:
+    acme:
+      email: alexromine3@gmail.com
+      storage: /etc/traefik/acme/acme.json
+      httpChallenge:
+        # used during the challenge
+        entryPoint: web
+

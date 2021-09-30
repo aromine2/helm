@@ -3,6 +3,12 @@ kind: StatefulSet
 metadata:
   name: {{ .Release.Name }}
   namespace: {{ .Release.Name }}
+  {{- if .Values.statefulset.labels }}
+  labels:
+    {{- range .Values.statefulset.labels }}
+    {{ .key }}: {{ .value }}
+    {{- end}}
+  {{- end}}
 spec:
   replicas: 1
   selector:
@@ -42,10 +48,12 @@ spec:
           {{- end }}
         {{- end }}
         {{- if .Values.statefulset.volumes }}
+      {{- if .volumes }}
       volumes:
         {{- range .Values.statefulset.volumes }}
         - name: {{ .name }}
           persistentVolumeClaim:
             claimName: {{ .persistentVolumeClaim.claimName }}
         {{- end }}
+      {{- end }}
       {{- end }}
