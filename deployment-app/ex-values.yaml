@@ -11,17 +11,17 @@ statefulset:
         - name: foundry-storage
           mountPath: /data
       env:
-      # after helm install run:
-      # kubectl create secret generic <secret-name> -n <ns> --from-literal <key>='<value>'
-        - name: FOUNDRY_USERNAME
+        # after helm install run:
+        # kubectl create secret generic <mysecret> -n <.Release.Name> --from-literal <key>='<value>'
+        - name: SECRET_USERNAME
           valueFrom:
             secretKeyRef:
-              name: login-info
+              name: mysecret
               key: username
-        - name: FOUNDRY_PASSWORD
+        - name: SECRET_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: login-info
+              name: mysecret
               key: password
   volumes:
     - name: foundry-storage
@@ -33,21 +33,22 @@ statefulset:
 
 service:
   ports:
-    - name: foundry-port
+    - name: port-name
       port: 30000
       targetPort: 30000
 
 ingress:
   enabled: true
   rules:
-    - host: "foundry.pi"
+    - host: ""
       http:
         paths:
           - path: /
 #            pathType: Prefix  # optional
             backend:
               service:
-#                name: ""  # defaults to .Release.Name, only ok if one rule
+                # defaults to release name, only ok if one rule
+                name: ""
                 port:
                   number: 30000
 

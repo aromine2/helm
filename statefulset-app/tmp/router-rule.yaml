@@ -1,0 +1,15 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: burghtls
+spec:
+  entryPoints:
+    - websecure
+  routes:
+  - match: Host(`greatdnd.world`) && Path(`/`)
+    kind: Rule
+    services:
+    - name: burgh-app-service
+      port: 8888
+  tls:
+    certResolver: letsEncrypt

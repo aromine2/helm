@@ -5,50 +5,49 @@ statefulset:
   containers:
     - image: felddy/foundryvtt:release
       ports:
-        - name: foundry-port
+        - name: foundry-dev
           containerPort: 30000
       volumeMounts:
-        - name: foundry-storage
+        - name: foundry-dev-storage
           mountPath: /data
       env:
-        # after helm install run:
-        # kubectl create secret generic <mysecret> -n <.Release.Name> --from-literal <key>='<value>'
-        - name: SECRET_USERNAME
+      # after helm install run:
+      # kubectl create secret generic login-info --from-literal username='' --from-literal password=''
+        - name: FOUNDRY_USERNAME
           valueFrom:
             secretKeyRef:
-              name: mysecret
+              name: login-info
               key: username
-        - name: SECRET_PASSWORD
+        - name: FOUNDRY_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: mysecret
+              name: login-info
               key: password
   volumes:
-    - name: foundry-storage
+    - name: foundry-dev-storage
       persistentVolumeClaim:
-        claimName: foundry-pv-claim
-      volumeName: foundry-volume
+        claimName: foundry-dev-pv-claim
+      volumeName: foundry-dev-volume
       size: 10Gi
       hostPath: ""  # prefixed by data/, defaults to data/.Release.Name
 
 service:
   ports:
-    - name: port-name
+    - name: foundry-dev
       port: 30000
       targetPort: 30000
 
 ingress:
   enabled: true
   rules:
-    - host: ""
+    - host: "foundry-dev.greatdnd.world"
       http:
         paths:
           - path: /
 #            pathType: Prefix  # optional
             backend:
               service:
-                # defaults to release name, only ok if one rule
-                name: ""
+#                name: ""  # defaults to .Release.Name, only ok if one rule
                 port:
                   number: 30000
 

@@ -1,5 +1,5 @@
 apiVersion: apps/v1
-kind: StatefulSet
+kind: Deployment
 metadata:
   name: {{ .Release.Name }}
   namespace: {{ .Release.Name }}
@@ -14,7 +14,6 @@ spec:
   selector:
     matchLabels:
       app: {{ .Release.Name }}
-  serviceName: {{ .Release.Name }}-service
   template:
     metadata:
       labels:
