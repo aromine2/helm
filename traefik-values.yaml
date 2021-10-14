@@ -14,3 +14,10 @@ certificatesResolvers:
         # used during the challenge
         entryPoint: web
 
+http:
+  routers:
+    Router-1:
+      rule: "Host(`foo-domain`) && Path(`/foo-path/`)"
+      service: service-id
+      # will terminate the TLS request
+      tls: {}
