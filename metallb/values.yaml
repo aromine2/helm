@@ -1,7 +1,0 @@
-configInline:
-  address-pools:
-   - name: default
-     protocol: layer2
-     addresses:
-     - 24.9.176.0/24
-
