@@ -2,15 +2,6 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 statefulset:
-  labels: 
-    - key: traefik.http.routers.burgh.rule
-      value: Host('greatdnd.world')
-    - key: traefik.http.routers.burgh.tls
-      value: "true"
-    - key: traefik.http.routers.burgh.tls.certresolver
-      value: letsEncrypt
-    - key: traefik.http.routers.burgh.tls.domains[0].main
-      value: burghs.greatdnd.world
   containers:
     - image: aromine2/burgh:arm
       ports:

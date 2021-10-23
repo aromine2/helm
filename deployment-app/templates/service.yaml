@@ -3,6 +3,9 @@ kind: Service
 metadata:
   name: {{ .Release.Name }}-service
   namespace: {{ .Release.Name }}
+  annotations:
+    kubernetes.io/ingress.class: traefik
+    cert-manager.io/cluster-issuer: acme-prod
 spec:
   selector:
     app: {{ .Release.Name }}
@@ -39,5 +42,9 @@ spec:
             port:
               number: {{ .backend.service.port.number }}
       {{- end }}
+  tls:
+    - hosts:
+        - {{ .host }}
+      secretName: greatdnd-world-tls
   {{- end }}
 {{- end }}
