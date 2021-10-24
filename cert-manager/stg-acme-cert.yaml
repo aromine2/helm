@@ -11,3 +11,17 @@ spec:
   commonName: greatdnd.world # replace with your-domain
   dnsNames:
   - greatdnd.world # replace with your-domain
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: burghs.greatdnd-world # replace with your-domain
+  namespace: default
+spec:
+  secretName: burghs.greatdnd-world-tls # replace with your-domain-tls
+  issuerRef:
+    name: acme-staging
+    kind: ClusterIssuer
+  commonName: burghs.greatdnd.world # replace with your-domain
+  dnsNames:
+  - burghs.greatdnd.world # replace with your-domain

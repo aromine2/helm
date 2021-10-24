@@ -1,0 +1,32 @@
+# Default values for foundry-helm.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+statefulset:
+  containers:
+    - image: aromine2/burgh:arm
+      ports:
+        - name: main-port
+          containerPort: 8888
+
+service:
+  ports:
+    - name: port-name
+      port: 8888
+      targetPort: 8888
+
+ingress:
+  enabled: true
+  rules:
+    - host: "test.greatdnd.world"
+      http:
+        paths:
+          - path: /
+#            pathType: Prefix  # optional
+            backend:
+              service:
+                # defaults to release name, only ok if one rule
+                name: ""
+                port:
+                  number: 8888
+
+appRole: cluster-admin

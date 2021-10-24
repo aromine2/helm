@@ -23,6 +23,9 @@ kind: Ingress
 metadata:
   name: {{ .Release.Name }}-ingress
   namespace: {{ .Release.Name }}
+  annotations:
+    cert-manager.io/cluster-issuer: "acme-prod"
+    acme.cert-manager.io/http01-edit-in-place: "true"
 spec:
   rules:
   {{- range .Values.ingress.rules }}
