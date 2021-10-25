@@ -26,6 +26,7 @@ metadata:
   annotations:
     cert-manager.io/cluster-issuer: "acme-prod"
     acme.cert-manager.io/http01-edit-in-place: "true"
+    traefik.ingress.kubernetes.io/router.tls: "true"
 spec:
   rules:
   {{- range .Values.ingress.rules }}
@@ -51,3 +52,34 @@ spec:
       secretName: greatdnd-world-tls
   {{- end }}
 {{- end }}
+{{- /*}}
+---
+  {{- if .Values.ingress.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ .Release.Name }}-ingress-http
+  namespace: {{ .Release.Name }}
+spec:
+  rules:
+  {{- range .Values.ingress.rules }}
+  {{- if .host }}
+  - host: {{ .host }}
+    http:
+  {{- else }}
+  - http:
+  {{- end }}
+  paths:
+  {{- range .http.paths }}
+  - path: {{ .path | default "/" | quote }}
+    pathType: {{ .pathType | default "Prefix" | quote }}
+    backend:
+      service:
+        name: {{ .backend.service.name | default $.Release.Name }}-service
+        port:
+          number: {{ .backend.service.port.number }}
+  {{- end }}
+  {{- end }}
+  {{- end }}
+
+  {{- */}}
