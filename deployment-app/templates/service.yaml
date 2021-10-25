@@ -52,7 +52,6 @@ spec:
       secretName: greatdnd-world-tls
   {{- end }}
 {{- end }}
-{{- /*}}
 ---
   {{- if .Values.ingress.enabled }}
 apiVersion: networking.k8s.io/v1
@@ -69,17 +68,17 @@ spec:
   {{- else }}
   - http:
   {{- end }}
-  paths:
-  {{- range .http.paths }}
-  - path: {{ .path | default "/" | quote }}
-    pathType: {{ .pathType | default "Prefix" | quote }}
-    backend:
-      service:
-        name: {{ .backend.service.name | default $.Release.Name }}-service
-        port:
-          number: {{ .backend.service.port.number }}
+      paths:
+      {{- range .http.paths }}
+      - path: {{ .path | default "/" | quote }}
+        pathType: {{ .pathType | default "Prefix" | quote }}
+        backend:
+          service:
+            name: {{ .backend.service.name | default $.Release.Name }}-service
+            port:
+              number: {{ .backend.service.port.number }}
+      {{- end }}
+    {{- end }}
   {{- end }}
-  {{- end }}
-  {{- end }}
-
-  {{- */}}
+{{- /*}}
+{{- */}}

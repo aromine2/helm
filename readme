@@ -1,0 +1,5 @@
+# traefik
+helm upgrade traefik traefik/traefik -n kube-system -f traefik-values.yaml
+
+# deployment or statefulset
+helm upgrade -i <release_name> . -f <values-file>
