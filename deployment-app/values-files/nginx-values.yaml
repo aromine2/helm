@@ -17,7 +17,7 @@ service:
 ingress:
   enabled: true
   rules:
-    - host: ""
+    - host: "nginx.greatdnd.world"
       http:
         paths:
           - path: /
