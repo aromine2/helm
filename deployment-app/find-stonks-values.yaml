@@ -1,0 +1,45 @@
+# Default values for foundry-helm.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+deployment:
+  imagePullSecrets: docker-creds
+  containers:
+    - image: aromine2/find-stonks:0.1.20211031040710
+      ports:
+        - name: primary-port
+          containerPort: 8080
+      env:
+        # after helm install run:
+        # kubectl create secret generic <mysecret> -n <.Release.Name> --from-literal <key>='<value>'
+        - name: ALPHA_ADVANTAGE_PW
+          valueFrom:
+            secretKeyRef:
+              name: mysecret
+              key: api_key
+
+service:
+  ports:
+    - name: port-name
+      port: 443
+      targetPort: 8080
+
+ingress:
+  enabled: true
+  rules:
+    - host: "find-stonks.greatdnd.world"
+      http:
+        paths:
+          - path: /
+#            pathType: Prefix  # optional
+            backend:
+              service:
+                # defaults to release name, only ok if one rule
+                name: ""
+                port:
+                  number: 443
+
+appRole: cluster-admin
+
+#kubectl create secret generic regcred \
+#    --from-file=.dockerconfigjson=<path/to/.docker/config.json> \
+#    --type=kubernetes.io/dockerconfigjson

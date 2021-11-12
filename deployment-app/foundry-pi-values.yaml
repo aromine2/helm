@@ -40,7 +40,7 @@ service:
 ingress:
   enabled: true
   rules:
-    - host: "foundry-dev.greatdnd.world"
+    - host: "foundry-dev.pi"
       http:
         paths:
           - path: /

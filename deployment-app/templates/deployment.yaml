@@ -3,12 +3,12 @@ kind: Deployment
 metadata:
   name: {{ .Release.Name }}
   namespace: {{ .Release.Name }}
-  {{- if .Values.statefulset.labels }}
+  {{- if .Values.deployment.labels }}
   labels:
-    {{- range .Values.statefulset.labels }}
+    {{- range .Values.deployment.labels }}
     {{ .key }}: {{ .value }}
-    {{- end}}
-  {{- end}}
+    {{- end }}
+  {{- end }}
 spec:
   replicas: 1
   selector:
@@ -19,9 +19,13 @@ spec:
       labels:
         app: {{ .Release.Name }}
     spec:
+      {{- if .Values.deployment.imagePullSecrets }}
+      imagePullSecrets:
+        - name: {{ .Values.deployment.imagePullSecrets }}
+      {{- end }}
       serviceAccountName: {{ .Release.Name }}
       containers:
-        {{- range .Values.statefulset.containers }}
+        {{- range .Values.deployment.containers }}
         - name: {{ .name | default $.Release.Name }}
           image: {{ .image }}
           ports:
@@ -46,9 +50,9 @@ spec:
                   key: {{ .valueFrom.secretKeyRef.key }}
           {{- end }}
         {{- end }}
-      {{- if .Values.statefulset.volumes }}
+      {{- if .Values.deployment.volumes }}
       volumes:
-        {{- range .Values.statefulset.volumes }}
+        {{- range .Values.deployment.volumes }}
         - name: {{ .name }}
           persistentVolumeClaim:
             claimName: {{ .persistentVolumeClaim.claimName }}

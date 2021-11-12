@@ -3,3 +3,9 @@ helm upgrade traefik traefik/traefik -n kube-system -f traefik-values.yaml
 
 # deployment or statefulset
 helm upgrade -i <release_name> . -f <values-file>
+
+
+# Debugging
+
+# Waiting for HTTP-01 challenge propagation: did not get expected response when querying endpoint
+# add annotation to ingress: 'acme.cert-manager.io/http01-edit-in-place: "true"'
