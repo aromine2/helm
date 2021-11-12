@@ -1,14 +1,17 @@
 # Default values for foundry-helm.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
-statefulset:
+deployment:
+  labels:
+    - key: "key-ex"
+      value: "value-ex"
   containers:
     - image: felddy/foundryvtt:release
       ports:
-        - name: foundry-port
+        - name: port
           containerPort: 30000
       volumeMounts:
-        - name: foundry-storage
+        - name: storage
           mountPath: /data
       env:
         # after helm install run:
@@ -24,11 +27,11 @@ statefulset:
               name: mysecret
               key: password
   volumes:
-    - name: foundry-storage
+    - name: storage
       persistentVolumeClaim:
-        claimName: foundry-pv-claim
-      volumeName: foundry-volume
-      size: 10Gi
+        claimName: pv-claim
+      volumeName: volume
+      size: 2Gi
       hostPath: ""  # prefixed by data/, defaults to data/.Release.Name
 
 service:
@@ -52,4 +55,5 @@ ingress:
                 port:
                   number: 30000
 
+# this is namespace bound
 appRole: cluster-admin

@@ -1,0 +1,32 @@
+# Default values for foundry-helm.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+deployment:
+  containers:
+    - image: nginx
+      ports:
+        - name: port
+          containerPort: 80
+
+service:
+  ports:
+    - name: port-name
+      port: 80
+      targetPort: 80
+
+ingress:
+  enabled: true
+  rules:
+    - host: ""
+      http:
+        paths:
+          - path: /
+#            pathType: Prefix  # optional
+            backend:
+              service:
+                # defaults to release name, only ok if one rule
+                name: ""
+                port:
+                  number: 80
+
+appRole: cluster-admin
