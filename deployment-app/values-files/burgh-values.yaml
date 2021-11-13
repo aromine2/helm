@@ -3,7 +3,7 @@
 # Declare variables to be passed into your templates.
 deployment:
   containers:
-    - image: aromine2/burgh:arm
+    - image: aromine2/burgh:0.1.20211113034019
       ports:
         - name: main-port
           containerPort: 8888

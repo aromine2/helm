@@ -1,4 +1,4 @@
-# Default values for foundry-helm.
+# Default values for helm deployment.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 deployment:
@@ -6,7 +6,7 @@ deployment:
     - key: "key-ex"
       value: "value-ex"
   containers:
-    - image: felddy/foundryvtt:release
+    - image: some-image:1
       ports:
         - name: port
           containerPort: 30000
