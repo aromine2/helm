@@ -1,0 +1,66 @@
+---
+{{- if .Values.ingress.enabled }}
+  {{- if .Values.ingress.http }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ .Release.Name }}-http
+  namespace: {{ .Release.Name }}
+spec:
+  rules:
+    {{- range .Values.ingress.rules }}
+      {{- if .host }}
+  - host: {{ .host }}
+    http:
+      {{- else }}
+  - http:
+      {{- end }}
+  paths:
+      {{- range .http.paths }}
+  - path: {{ .path | default "/" | quote }}
+    pathType: {{ .pathType | default "Prefix" | quote }}
+    backend:
+      service:
+        name: {{ .backend.service.name | default $.Release.Name }}-service
+        port:
+          number: {{ .backend.service.port.number }}
+      {{- end }}
+    {{- end }}
+  {{- else}}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ .Release.Name }}-ingress
+  namespace: {{ .Release.Name }}
+  annotations:
+    kubernetes.io/ingress.class: traefik
+    cert-manager.io/cluster-issuer: "acme-prod"
+    acme.cert-manager.io/http01-edit-in-place: "true"
+    traefik.ingress.kubernetes.io/router.tls: "true"
+    ingress.kubernetes.io/ssl-redirect: "true"
+spec:
+  rules:
+    {{- range .Values.ingress.rules }}
+      {{- if .host }}
+  - host: {{ .host }}
+    http:
+      {{- else }}
+  - http:
+      {{- end }}
+  paths:
+      {{- range .http.paths }}
+  - path: {{ .path | default "/" | quote }}
+    pathType: {{ .pathType | default "Prefix" | quote }}
+    backend:
+      service:
+        name: {{ .backend.service.name | default $.Release.Name }}-service
+        port:
+          number: {{ .backend.service.port.number }}
+      {{- end }}
+  tls:
+    - hosts:
+        - {{ .host }}
+      secretName: greatdnd-world-tls
+    {{- end }}
+  {{- end }}
+{{- end }}

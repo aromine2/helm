@@ -33,7 +33,7 @@ deployment:
       persistentVolumeClaim:
         claimName: pv-claim
       volumeName: volume
-      size: 2Gi
+      size: 1Gi
       hostPath: ""  # prefixed by data/, defaults to data/.Release.Name
 
 service:
@@ -44,6 +44,7 @@ service:
 
 ingress:
   enabled: true
+  http: "" # set to true to not have tls set up
   rules:
     - host: ""
       http:

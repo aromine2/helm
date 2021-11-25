@@ -5,14 +5,14 @@ deployment:
   containers:
     - image: pihole/pihole:latest
       ports:
-        - name: port
+        - name: dns-port
           containerPort: 53
-        - name: port
+        - name: web-port
           containerPort: 80
       volumeMounts:
         - name: pi-hole-storage
           mountPath: /etc/pihole/
-        - name: dsn-storage
+        - name: dns-storage
           mountPath: /etc/dnsmasq.d/
       env:
         # after helm install run:
@@ -20,23 +20,32 @@ deployment:
         - name: TZ
           value: "America/Denver"
   volumes:
-    - name: storage
+    - name: pi-hole-storage
       persistentVolumeClaim:
-        claimName: pv-claim
-      volumeName: volume
-      size: 2Gi
-      hostPath: ""  # prefixed by data/, defaults to data/.Release.Name
+        claimName: pi-hole-pv-claim
+      volumeName: pi-hole-volume
+      size: .5Gi
+      hostPath: "data/pi-hole/pihole"  # prefixed by data/, defaults to data/.Release.Name
+    - name: dns-storage
+      persistentVolumeClaim:
+        claimName: dns-pv-claim
+      volumeName: dns-volume
+      size: .5Gi
+      hostPath: "data/pi-hole/dnsmasq.d"  # prefixed by data/, defaults to data/.Release.Name
 
 service:
   ports:
-    - name: port-name
-      port: 30000
-      targetPort: 30000
+    - name: dns-port-name
+      port: 53
+      targetPort: 53
+    - name: web-port-name
+      port: 80
+      targetPort: 80
 
 ingress:
   enabled: true
   rules:
-    - host: ""
+    - host: "pi-hole.greatdnd.world"
       http:
         paths:
           - path: /
@@ -44,9 +53,9 @@ ingress:
             backend:
               service:
                 # defaults to release name, only ok if one rule
-                name: ""
+                name: "dns"
                 port:
-                  number: 30000
+                  number: 80
 
 # this is namespace bound
 appRole: cluster-admin
