@@ -26,6 +26,8 @@ deployment:
             secretKeyRef:
               name: mysecret
               key: password
+        - name: TZ
+          value: "America/Denver"
   volumes:
     - name: storage
       persistentVolumeClaim:

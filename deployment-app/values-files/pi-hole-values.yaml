@@ -17,16 +17,8 @@ deployment:
       env:
         # after helm install run:
         # kubectl create secret generic <mysecret> -n <.Release.Name> --from-literal <key>='<value>'
-        - name: SECRET_USERNAME
-          valueFrom:
-            secretKeyRef:
-              name: mysecret
-              key: username
-        - name: SECRET_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: mysecret
-              key: password
+        - name: TZ
+          value: "America/Denver"
   volumes:
     - name: storage
       persistentVolumeClaim:
