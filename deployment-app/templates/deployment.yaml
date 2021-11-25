@@ -43,11 +43,7 @@ spec:
           {{- end }}
           env:
           {{- range .env }}
-            - name: {{ .name }}
-              valueFrom:
-                secretKeyRef:
-                  name: {{ .valueFrom.secretKeyRef.name }}
-                  key: {{ .valueFrom.secretKeyRef.key }}
+            - {{ . | toYaml | indent 14 | trim }}
           {{- end }}
         {{- end }}
       {{- if .Values.deployment.volumes }}

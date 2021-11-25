@@ -1,0 +1,60 @@
+# Default values for helm deployment.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+deployment:
+  containers:
+    - image: pihole/pihole:latest
+      ports:
+        - name: port
+          containerPort: 53
+        - name: port
+          containerPort: 80
+      volumeMounts:
+        - name: pi-hole-storage
+          mountPath: /etc/pihole/
+        - name: dsn-storage
+          mountPath: /etc/dnsmasq.d/
+      env:
+        # after helm install run:
+        # kubectl create secret generic <mysecret> -n <.Release.Name> --from-literal <key>='<value>'
+        - name: SECRET_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: mysecret
+              key: username
+        - name: SECRET_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mysecret
+              key: password
+  volumes:
+    - name: storage
+      persistentVolumeClaim:
+        claimName: pv-claim
+      volumeName: volume
+      size: 2Gi
+      hostPath: ""  # prefixed by data/, defaults to data/.Release.Name
+
+service:
+  ports:
+    - name: port-name
+      port: 30000
+      targetPort: 30000
+
+ingress:
+  enabled: true
+  rules:
+    - host: ""
+      http:
+        paths:
+          - path: /
+#            pathType: Prefix  # optional
+            backend:
+              service:
+                # defaults to release name, only ok if one rule
+                name: ""
+                port:
+                  number: 30000
+
+# this is namespace bound
+appRole: cluster-admin
